@@ -1,0 +1,166 @@
+#include <stdio.h>
+#define SIZE 10
+
+int hashTable[SIZE];
+
+void initTable() {
+    for (int i = 0; i < SIZE; i++)
+        hashTable[i] = -1; // -1 means empty
+}
+
+int hash(int key) {
+    return key % SIZE;
+}
+
+// Linear Probing Insertion
+void insertLinear(int key) {
+    int index = hash(key);
+    for (int i = 0; i < SIZE; i++) {
+        int try = (index + i) % SIZE;
+        if (hashTable[try] == -1 || hashTable[try] == -2) {
+            hashTable[try] = key;
+            printf("Inserted %d at index %d using Linear Probing.\n", key, try);
+            return;
+        }
+    }
+    printf("Hash Table is full! (Linear Probing)\n");
+}
+
+// Quadratic Probing Insertion
+void insertQuadratic(int key) {
+    int index = hash(key);
+    for (int i = 0; i < SIZE; i++) {
+        int try = (index + i * i) % SIZE;
+        if (hashTable[try] == -1 || hashTable[try] == -2) {
+            hashTable[try] = key;
+            printf("Inserted %d at index %d using Quadratic Probing.\n", key, try);
+            return;
+        }
+    }
+    printf("Hash Table is full! (Quadratic Probing)\n");
+}
+
+// Search Linear Probing
+void searchLinear(int key) {
+    int index = hash(key);
+    for (int i = 0; i < SIZE; i++) {
+        int try = (index + i) % SIZE;
+        if (hashTable[try] == -1) break; // not found
+        if (hashTable[try] == key) {
+            printf("Found %d at index %d (Linear Probing).\n", key, try);
+            return;
+        }
+    }
+    printf("%d not found! (Linear Probing)\n", key);
+}
+
+// Search Quadratic Probing
+void searchQuadratic(int key) {
+    int index = hash(key);
+    for (int i = 0; i < SIZE; i++) {
+        int try = (index + i * i) % SIZE;
+        if (hashTable[try] == -1) break; // not found
+        if (hashTable[try] == key) {
+            printf("Found %d at index %d (Quadratic Probing).\n", key, try);
+            return;
+        }
+    }
+    printf("%d not found! (Quadratic Probing)\n", key);
+}
+
+// Delete using Linear Probing
+void deleteLinear(int key) {
+    int index = hash(key);
+    for (int i = 0; i < SIZE; i++) {
+        int try = (index + i) % SIZE;
+        if (hashTable[try] == -1) break; // not found
+        if (hashTable[try] == key) {
+            hashTable[try] = -2; // -2 means deleted
+            printf("Deleted %d from index %d (Linear Probing).\n", key, try);
+            return;
+        }
+    }
+    printf("%d not found to delete! (Linear Probing)\n", key);
+}
+
+// Delete using Quadratic Probing
+void deleteQuadratic(int key) {
+    int index = hash(key);
+    for (int i = 0; i < SIZE; i++) {
+        int try = (index + i * i) % SIZE;
+        if (hashTable[try] == -1) break;
+        if (hashTable[try] == key) {
+            hashTable[try] = -2; // mark as deleted
+            printf("Deleted %d from index %d (Quadratic Probing).\n", key, try);
+            return;
+        }
+    }
+    printf("%d not found to delete! (Quadratic Probing)\n", key);
+}
+
+void display() {
+    printf("\nHash Table:\n");
+    for (int i = 0; i < SIZE; i++)
+        printf("%d => %d\n", i, hashTable[i]);
+}
+
+int main() {
+    int choice, key;
+    initTable();
+
+    while (1) {
+        printf("\n--- Hashing Menu ---\n");
+        printf("1. Insert using Linear Probing\n");
+        printf("2. Insert using Quadratic Probing\n");
+        printf("3. Search using Linear Probing\n");
+        printf("4. Search using Quadratic Probing\n");
+        printf("5. Delete using Linear Probing\n");
+        printf("6. Delete using Quadratic Probing\n");
+        printf("7. Display Hash Table\n");
+        printf("8. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the key to insert (Linear): ");
+                scanf("%d", &key);
+                insertLinear(key);
+                break;
+            case 2:
+                printf("Enter the key to insert (Quadratic): ");
+                scanf("%d", &key);
+                insertQuadratic(key);
+                break;
+            case 3:
+                printf("Enter the key to search (Linear): ");
+                scanf("%d", &key);
+                searchLinear(key);
+                break;
+            case 4:
+                printf("Enter the key to search (Quadratic): ");
+                scanf("%d", &key);
+                searchQuadratic(key);
+                break;
+            case 5:
+                printf("Enter the key to delete (Linear): ");
+                scanf("%d", &key);
+                deleteLinear(key);
+                break;
+            case 6:
+                printf("Enter the key to delete (Quadratic): ");
+                scanf("%d", &key);
+                deleteQuadratic(key);
+                break;
+            case 7:
+                display();
+                break;
+            case 8:
+                return 0;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    return 0;
+}
